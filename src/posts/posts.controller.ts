@@ -3,56 +3,11 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   Post,
   Put,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-
-/**
- * author: string;
- * title: string;
- * content: string;
- * likeCount: number;
- * commentCount: number;
- */
-
-interface PostModel {
-  id: number;
-  author: string;
-  title: string;
-  content: string;
-  likeCount: number;
-  commentCount: number;
-}
-
-let posts: PostModel[] = [
-  {
-    id: 1,
-    author: 'teddy',
-    title: 'bear',
-    content: 'dad',
-    likeCount: 1111,
-    commentCount: 123,
-  },
-  {
-    id: 2,
-    author: 'teddy2',
-    title: 'bear2',
-    content: 'dad2',
-    likeCount: 1111,
-    commentCount: 123,
-  },
-  {
-    id: 3,
-    author: 'teddy3',
-    title: 'bear3',
-    content: 'dad3',
-    likeCount: 1111,
-    commentCount: 123,
-  },
-];
 
 @Controller('posts')
 export class PostsController {
@@ -62,19 +17,13 @@ export class PostsController {
   // 1)GET /posts -> 모든 post를가져옴.
   @Get()
   getPosts() {
-    return posts;
+    return this.postsService.getAllPosts();
   }
 
   // 2)GET /posts/:id -> id에 해당되는 posts를 가져옴, 예를 들어 id=1일 경우 1의 id를 갖고있는 포스트를 겟
   @Get(':id')
   getPost(@Param('id') id: string) {
-    const post = posts.find((post) => post.id === +id);
-
-    if (!post) {
-      throw new NotFoundException();
-    }
-
-    return post;
+    return this.postsService.getPostById(+id);
   }
 
   // 3)POST /posts -> POST를 생성
@@ -84,18 +33,7 @@ export class PostsController {
     @Body('title') title: string,
     @Body('content') content: string,
   ) {
-    const post: PostModel = {
-      id: posts[posts.length - 1].id + 1,
-      author,
-      title,
-      content,
-      likeCount: 0,
-      commentCount: 0,
-    };
-
-    posts = [...posts, post];
-
-    return post;
+    return this.postsService.createPost(author, title, content);
   }
 
   //4) PUT /posts/:id -> id에 해당되는 POST를 변경.
@@ -107,40 +45,12 @@ export class PostsController {
     @Body('title') title?: string,
     @Body('content') content?: string,
   ) {
-    const post = posts.find((post) => post.id === +id);
-
-    if (!post) {
-      throw new NotFoundException();
-    }
-
-    if (author) {
-      post.author = author;
-    }
-
-    if (title) {
-      post.title = title;
-    }
-
-    if (content) {
-      post.content = content;
-    }
-
-    posts = posts.map((prevPost) => (prevPost.id === +id ? post : prevPost));
-
-    return post;
+    return this.postsService.updatePost(+id, author, title, content);
   }
 
   //5) DELETE /posts/:id -> id에 해당되는 POST를 삭제.
   @Delete(':id')
   deletePost(@Param('id') id: string) {
-    const post = posts.find((post) => post.id === +id);
-
-    if (!post) {
-      throw new NotFoundException();
-    }
-
-    posts = posts.filter((post) => post.id !== +id);
-
-    return id;
+    return this.postsService.deletePost(+id);
   }
 }
