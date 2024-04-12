@@ -1,4 +1,5 @@
-import { Body, Controller, Headers, Post } from '@nestjs/common';
+import { Body, Controller, Headers, Post, UseGuards } from '@nestjs/common';
+import { BasicTokenGuard } from 'src/auth/guard/basic-token.guard';
 import { MaxLengthPipe, MinLengthPipe } from 'src/auth/pipe/password.pipe';
 import { AuthService } from './auth.service';
 
@@ -33,6 +34,7 @@ export class AuthController {
   }
 
   @Post('login/email')
+  @UseGuards(BasicTokenGuard)
   postLoginEmail(@Headers('authorization') rawToken: string) {
     const token = this.authService.extractTokenFromHeader(rawToken, false);
 
