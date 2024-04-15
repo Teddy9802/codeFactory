@@ -1,7 +1,7 @@
 import { Body, Controller, Headers, Post, UseGuards } from '@nestjs/common';
+import { RegisterUserDto } from 'src/auth/dto/register-user.dto';
 import { BasicTokenGuard } from 'src/auth/guard/basic-token.guard';
 import { RefreshTokenGuard } from 'src/auth/guard/bearer-token.guard';
-import { MaxLengthPipe, MinLengthPipe } from 'src/auth/pipe/password.pipe';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -47,16 +47,7 @@ export class AuthController {
   }
 
   @Post('register/email')
-  postRegisterEmail(
-    @Body('nickname') nickname: string,
-    @Body('email') email: string,
-    @Body('password', new MaxLengthPipe(8, '비밀번호'), new MinLengthPipe(3))
-    password: string,
-  ) {
-    return this.authService.registerWithEmail({
-      nickname,
-      email,
-      password,
-    });
+  postRegisterEmail(@Body() body: RegisterUserDto) {
+    return this.authService.registerWithEmail(body);
   }
 }
