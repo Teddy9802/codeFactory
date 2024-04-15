@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { AccessTokenGuard } from 'src/auth/guard/bearer-token.guard';
 import { CreatePostDto } from 'src/posts/dto/create-post.dto';
+import { UpdatePostDto } from 'src/posts/dto/update-post.dto';
 import { User } from 'src/users/decorator/user.decorator';
 import { PostsService } from './posts.service';
 
@@ -49,10 +50,11 @@ export class PostsController {
   @Put(':id')
   putPost(
     @Param('id', ParseIntPipe) id: number,
-    @Body('title') title?: string,
-    @Body('content') content?: string,
+    @Body() body: UpdatePostDto,
+    // @Body('title') title?: string,
+    // @Body('content') content?: string,
   ) {
-    return this.postsService.updatePost(id, title, content);
+    return this.postsService.updatePost(id, body);
   }
 
   //5) DELETE /posts/:id -> id에 해당되는 POST를 삭제.
