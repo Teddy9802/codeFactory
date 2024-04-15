@@ -4,10 +4,10 @@ import { PostsModel } from 'src/posts/entities/posts.entity';
 import { UsersModel } from 'src/users/entities/users.entity';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PostsModule } from './posts/posts.module';
-import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
+import { PostsModule } from './posts/posts.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [

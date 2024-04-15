@@ -7,7 +7,10 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
+import { AccessTokenGuard } from 'src/auth/guard/bearer-token.guard';
+import { User } from 'src/users/decorator/user.decorator';
 import { PostsService } from './posts.service';
 
 @Controller('posts')
@@ -29,12 +32,13 @@ export class PostsController {
 
   // 3)POST /posts -> POST를 생성
   @Post()
+  @UseGuards(AccessTokenGuard)
   postPosts(
-    @Body('authorId') authorId: number,
+    @User('id') userId: number,
     @Body('title') title: string,
     @Body('content') content: string,
   ) {
-    return this.postsService.createPost(authorId, title, content);
+    return this.postsService.createPost(userId, title, content);
   }
 
   //4) PUT /posts/:id -> id에 해당되는 POST를 변경.
