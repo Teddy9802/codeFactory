@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostsModel } from 'src/posts/entities/posts.entity';
 import { UsersModel } from 'src/users/entities/users.entity';
@@ -31,6 +32,12 @@ import { UsersModule } from './users/users.module';
     CommonModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
+    },
+  ],
 })
 export class AppModule {}
