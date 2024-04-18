@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { BasePaginationDto } from 'src/common/dto/base-pagination.dto';
 import { BaseModel } from 'src/common/entity/base.entity';
-import { FindManyOptions, Repository } from 'typeorm';
+import {
+  FindManyOptions,
+  FindOptionsOrder,
+  FindOptionsWhere,
+  Repository,
+} from 'typeorm';
 
 @Injectable()
 export class CommonService {
@@ -74,6 +79,43 @@ export class CommonService {
      *      3-2) 2개의 값으로 나뉜다면 정확한 값을 필터하는 것이기 때문에 operator 없이 적용한다.
      *          where__id
      *          ['where', 'id']
+     * 4) order의 경우 3-2와 같이 적용한다.
      */
+    let where: FindOptionsWhere<T> = {};
+    let order: FindOptionsOrder<T> = {};
+
+    for (const [key, value] of Object.entries(dto)) {
+      // key -> where__id__less_than
+      // value -> 1
+
+      if (key.startsWith('where__')) {
+        where = {
+          ...where,
+          ...this.parseWhereFilter(key, value),
+        };
+      } else if (key.startsWith('order__')) {
+        order = {
+          ...order,
+          ...this.parseOrderFilter(key, value),
+        };
+      }
+    }
+
+    return {
+      where,
+      order,
+      take: dto.take,
+      skip: dto.page ? dto.take * (dto.page - 1) : null,
+    };
   }
+
+  private parseWhereFilter<T extends BaseModel>(
+    key: string,
+    value: any,
+  ): FindManyOptions<T> {}
+
+  private parseOrderFilter<T extends BaseModel>(
+    key: string,
+    value: any,
+  ): FindManyOptions<T> {}
 }
