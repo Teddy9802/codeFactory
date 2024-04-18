@@ -21,7 +21,7 @@ export class PaginatePostDto {
   // createdAt -> 생성된 시간의 내림차/오름차 순으로 정렬
   @IsIn(['ASC', 'DESC'])
   @IsOptional()
-  order__createAt: 'ASC' | 'DESC' = 'ASC';
+  order__createdAt: 'ASC' | 'DESC' = 'ASC';
 
   // 몇개의 데이터를 응답으로 받을지
   @IsNumber()
