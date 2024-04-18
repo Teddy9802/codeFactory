@@ -1,9 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { HOST, PROTOCOL } from 'src/common/const/env.const';
 import { CreatePostDto } from 'src/posts/dto/create-post.dto';
+import { PaginatePostDto } from 'src/posts/dto/paginate-post.dto';
 import { UpdatePostDto } from 'src/posts/dto/update-post.dto';
 import { PostsModel } from 'src/posts/entities/posts.entity';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, LessThan, MoreThan, Repository } from 'typeorm';
 
 /**
  * author: string;
@@ -60,6 +62,98 @@ export class PostsService {
     return this.postsRepository.find({
       relations: ['author'],
     });
+  }
+
+  async generatePosts(userId: number) {
+    for (let i = 0; i < 100; i++) {
+      await this.createPost(userId, {
+        title: `임의로 생생된 포스트 제목 ${i}`,
+        content: `임의로 생성된 포스트 내용 ${i}`,
+      });
+    }
+  }
+
+  //1) 오름차 순으로 정렬하는 pagination만 구현한다.
+  async paginatePosts(dto: PaginatePostDto) {
+    const where: FindOptionsWhere<PostsModel> = {};
+
+    if (dto.where__id_less_than) {
+      /**
+       * {
+       *  id: LessThan(dto.where__id_less_than);
+       * }
+       */
+      where.id = LessThan(dto.where__id_less_than);
+    } else if (dto.where__id_more_than) {
+      where.id = MoreThan(dto.where__id_more_than);
+    }
+
+    // 1, 2, 3, 4, 5
+    const posts = await this.postsRepository.find({
+      where,
+      // order__createdAt
+      order: {
+        createdAt: dto.order__createAt,
+      },
+      take: dto.take,
+    });
+
+    // 해당되는 포스트가 0개 이상이면
+    // 마지막 포스트를 가져오고
+    // 아니면 null을 반환한다.
+    const lastItem =
+      posts.length > 0 && posts.length === dto.take
+        ? posts[posts.length - 1]
+        : null;
+
+    const nextUrl = lastItem && new URL(`${PROTOCOL}://${HOST}/posts`);
+
+    if (nextUrl) {
+      /**
+       * dto의 키값들을 루핑하면서
+       * 키값에 해당되는 벨류가 존재하면
+       * param에 그대로 붙여넣는다.
+       *
+       * 단, where__id_more_than 값만 lastItem의 마지막 값으로 넣어준다.
+       */
+      for (const key of Object.keys(dto)) {
+        if (dto[key]) {
+          if (key !== 'where__id_more_than' && key !== 'where__id_less_than') {
+            nextUrl.searchParams.append(key, dto[key]);
+          }
+        }
+      }
+
+      let key = null;
+
+      if (dto.order__createAt === 'DESC') {
+        key = 'where__id_more_than';
+      } else {
+        key = 'where__id_less_than';
+      }
+
+      nextUrl.searchParams.append(key, lastItem.id.toString());
+    }
+
+    /**
+     * Response
+     *
+     * data:data[],
+     * cursor: {
+     *      after: 마지막 Data와 ID
+     * },
+     * count: 응답한 데이터의 갯수
+     * next: 다음 요청을 할때 사용할 URL
+     *
+     */
+    return {
+      data: posts,
+      cursor: {
+        after: lastItem?.id ?? null,
+      },
+      count: posts.length,
+      next: nextUrl?.toString() ?? null,
+    };
   }
 
   async getPostById(id: number) {

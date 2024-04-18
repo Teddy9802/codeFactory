@@ -7,10 +7,12 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AccessTokenGuard } from 'src/auth/guard/bearer-token.guard';
 import { CreatePostDto } from 'src/posts/dto/create-post.dto';
+import { PaginatePostDto } from 'src/posts/dto/paginate-post.dto';
 import { UpdatePostDto } from 'src/posts/dto/update-post.dto';
 import { User } from 'src/users/decorator/user.decorator';
 import { PostsService } from './posts.service';
@@ -22,8 +24,16 @@ export class PostsController {
 
   // 1)GET /posts -> 모든 post를가져옴.
   @Get()
-  getPosts() {
-    return this.postsService.getAllPosts();
+  getPosts(@Query() query: PaginatePostDto) {
+    return this.postsService.paginatePosts(query);
+  }
+
+  @Post('random')
+  @UseGuards(AccessTokenGuard)
+  async postPostsRandom(@User('id') userId: number) {
+    await this.postsService.generatePosts(userId);
+
+    return true;
   }
 
   // 2)GET /posts/:id -> id에 해당되는 posts를 가져옴, 예를 들어 id=1일 경우 1의 id를 갖고있는 포스트를 겟
