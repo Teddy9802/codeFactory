@@ -4,10 +4,10 @@ import { FILTER_MAPPER } from 'src/common/const/filter-mapper.const';
 import { BasePaginationDto } from 'src/common/dto/base-pagination.dto';
 import { BaseModel } from 'src/common/entity/base.entity';
 import {
-  FindManyOptions,
-  FindOptionsOrder,
-  FindOptionsWhere,
-  Repository,
+    FindManyOptions,
+    FindOptionsOrder,
+    FindOptionsWhere,
+    Repository
 } from 'typeorm';
 
 @Injectable()
@@ -38,7 +38,19 @@ export class CommonService {
     dto: BasePaginationDto,
     repository: Repository<T>,
     overrideFindOptions: FindManyOptions<T> = {},
-  ) {}
+  ) {
+    const findOptions = this.composeFindOptions<T>(dto);
+
+    const [data, count] = await repository.findAndCount({
+      ...findOptions,
+      ...overrideFindOptions,
+    });
+
+    return {
+      data,
+      total: count,
+    };
+  }
 
   private async cursorPaginate<T extends BaseModel>(
     dto: BasePaginationDto,
@@ -62,7 +74,7 @@ export class CommonService {
         ? results[results.length - 1]
         : null;
 
-    const nextUrl = lastItem && new URL(`${PROTOCOL}://${HOST}/posts`);
+    const nextUrl = lastItem && new URL(`${PROTOCOL}://${HOST}/${path}`);
 
     if (nextUrl) {
       /**
