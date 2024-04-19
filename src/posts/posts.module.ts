@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
+import { CommonModule } from 'src/common/common.module';
+import { CommonService } from 'src/common/common.service';
 import { PostsModel } from 'src/posts/entities/posts.entity';
 import { UsersModel } from 'src/users/entities/users.entity';
 import { UsersService } from 'src/users/users.service';
@@ -15,9 +17,10 @@ import { PostsService } from './posts.service';
     TypeOrmModule.forFeature([
       PostsModel, //
       UsersModel,
+      CommonModule,
     ]),
   ],
   controllers: [PostsController],
-  providers: [PostsService, AuthService, UsersService], //@Injectable을 위한 프로바이더 -> 주입
+  providers: [PostsService, AuthService, UsersService, CommonService], //@Injectable을 위한 프로바이더 -> 주입
 })
 export class PostsModule {}
