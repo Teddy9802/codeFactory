@@ -4,10 +4,10 @@ import { FILTER_MAPPER } from 'src/common/const/filter-mapper.const';
 import { BasePaginationDto } from 'src/common/dto/base-pagination.dto';
 import { BaseModel } from 'src/common/entity/base.entity';
 import {
-    FindManyOptions,
-    FindOptionsOrder,
-    FindOptionsWhere,
-    Repository
+  FindManyOptions,
+  FindOptionsOrder,
+  FindOptionsWhere,
+  Repository,
 } from 'typeorm';
 
 @Injectable()
@@ -249,7 +249,11 @@ export class CommonService {
       //   } else {
       //     options[field] = FILTER_MAPPER[operator](value);
       //   }
-      options[field] = FILTER_MAPPER[operator](value);
+      if (operator === 'i_like') {
+        options[field] = FILTER_MAPPER[operator](`%${value}%`);
+      } else {
+        options[field] = FILTER_MAPPER[operator](value);
+      }
     }
 
     return options;
