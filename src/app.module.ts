@@ -1,4 +1,5 @@
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostsModel } from 'src/posts/entities/posts.entity';
@@ -13,6 +14,10 @@ import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     PostsModule,
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: '127.0.0.1',
