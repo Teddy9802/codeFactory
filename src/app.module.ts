@@ -1,6 +1,7 @@
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   ENV_DB_DATABASE_KEY,
@@ -9,6 +10,7 @@ import {
   ENV_DB_PORT_KEY,
   ENV_DB_USERNAME_KEY,
 } from 'src/common/const/env-keys.const';
+import { PUBLIC_FOLDER_PATH } from 'src/common/const/path.const';
 import { PostsModel } from 'src/posts/entities/posts.entity';
 import { UsersModel } from 'src/users/entities/users.entity';
 import { AppController } from './app.controller';
@@ -21,6 +23,13 @@ import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     PostsModule,
+    ServeStaticModule.forRoot({
+      // 4022.jpeg
+      // http://localhost:3000/public/posts/4022.jpeg
+      // http://localhost:3000/posts/4022.jpeg
+      rootPath: PUBLIC_FOLDER_PATH,
+      serveRoot: '/public',
+    }),
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
