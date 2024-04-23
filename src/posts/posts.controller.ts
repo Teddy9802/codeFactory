@@ -8,11 +8,8 @@ import {
   Patch,
   Post,
   Query,
-  UploadedFile,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { AccessTokenGuard } from 'src/auth/guard/bearer-token.guard';
 import { CreatePostDto } from 'src/posts/dto/create-post.dto';
 import { PaginatePostDto } from 'src/posts/dto/paginate-post.dto';
@@ -49,15 +46,13 @@ export class PostsController {
   // DTO - Data Transfer Object 데이터를 전송하는 객체
   @Post()
   @UseGuards(AccessTokenGuard)
-  @UseInterceptors(FileInterceptor('image'))
   postPosts(
     @User('id') userId: number,
     @Body() body: CreatePostDto,
-    @UploadedFile() file?: Express.Multer.File,
     // @Body('title') title: string,
     // @Body('content') content: string,
   ) {
-    return this.postsService.createPost(userId, body, file?.filename);
+    return this.postsService.createPost(userId, body);
   }
 
   //4) PATCH /posts/:id -> id에 해당되는 POST를 변경.
