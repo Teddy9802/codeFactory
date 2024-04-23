@@ -11,6 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AccessTokenGuard } from 'src/auth/guard/bearer-token.guard';
+import { ImageModelType } from 'src/common/entity/image.entity';
 import { CreatePostDto } from 'src/posts/dto/create-post.dto';
 import { PaginatePostDto } from 'src/posts/dto/paginate-post.dto';
 import { UpdatePostDto } from 'src/posts/dto/update-post.dto';
@@ -65,9 +66,18 @@ export class PostsController {
     // @Body('title') title: string,
     // @Body('content') content: string,
   ) {
-    await this.postsService.createPostImage(body);
+    const post = await this.postsService.createPost(userId, body);
 
-    return this.postsService.createPost(userId, body);
+    for (let i = 0; i < body.images.length; i++) {
+      await this.postsService.createPostImage({
+        post,
+        order: i,
+        path: body.images[i],
+        type: ImageModelType.POST_IMAGE,
+      });
+    }
+
+    return this.postsService.getPostById(post.id);
   }
 
   //4) PATCH /posts/:id -> id에 해당되는 POST를 변경.

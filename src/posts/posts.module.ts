@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
 import { CommonModule } from 'src/common/common.module';
 import { CommonService } from 'src/common/common.service';
+import { ImageModel } from 'src/common/entity/image.entity';
 import { PostsModel } from 'src/posts/entities/posts.entity';
 import { UsersModel } from 'src/users/entities/users.entity';
 import { UsersService } from 'src/users/users.service';
@@ -18,6 +19,7 @@ import { PostsService } from './posts.service';
     TypeOrmModule.forFeature([
       PostsModel, //
       UsersModel,
+      ImageModel,
     ]),
     CommonModule,
   ],
