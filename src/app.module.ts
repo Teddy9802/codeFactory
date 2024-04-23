@@ -11,6 +11,7 @@ import {
   ENV_DB_USERNAME_KEY,
 } from 'src/common/const/env-keys.const';
 import { PUBLIC_FOLDER_PATH } from 'src/common/const/path.const';
+import { ImageModel } from 'src/common/entity/image.entity';
 import { PostsModel } from 'src/posts/entities/posts.entity';
 import { UsersModel } from 'src/users/entities/users.entity';
 import { AppController } from './app.controller';
@@ -44,6 +45,7 @@ import { UsersModule } from './users/users.module';
       entities: [
         PostsModel, //
         UsersModel,
+        ImageModel,
       ],
       synchronize: true,
     }),
