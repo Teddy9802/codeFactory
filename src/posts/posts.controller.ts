@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  InternalServerErrorException,
   Param,
   ParseIntPipe,
   Patch,
@@ -15,6 +16,7 @@ import { ImageModelType } from 'src/common/entity/image.entity';
 import { CreatePostDto } from 'src/posts/dto/create-post.dto';
 import { PaginatePostDto } from 'src/posts/dto/paginate-post.dto';
 import { UpdatePostDto } from 'src/posts/dto/update-post.dto';
+import { PostsImagesService } from 'src/posts/image/images.service';
 import { User } from 'src/users/decorator/user.decorator';
 import { DataSource } from 'typeorm';
 import { PostsService } from './posts.service';
@@ -23,6 +25,7 @@ import { PostsService } from './posts.service';
 export class PostsController {
   constructor(
     private readonly postsService: PostsService, //
+    private readonly postsImagesService: PostsImagesService,
     private readonly dataSource: DataSource,
   ) {}
   // command + . = 임포트 추가, 업데이트해주는 도구
@@ -84,15 +87,22 @@ export class PostsController {
 
     // 로직 실행
     try {
-      const post = await this.postsService.createPost(userId, body);
+      const post = await this.postsService.createPost(
+        userId, //
+        body,
+        qr,
+      );
 
       for (let i = 0; i < body.images.length; i++) {
-        await this.postsService.createPostImage({
-          post,
-          order: i,
-          path: body.images[i],
-          type: ImageModelType.POST_IMAGE,
-        });
+        await this.postsImagesService.createPostImage(
+          {
+            post,
+            order: i,
+            path: body.images[i],
+            type: ImageModelType.POST_IMAGE,
+          },
+          qr,
+        );
       }
 
       await qr.commitTransaction();
@@ -104,6 +114,8 @@ export class PostsController {
       // 트랜잭션을 종료하고 원래 상태로 되돌린다.
       await qr.rollbackTransaction();
       await qr.release();
+
+      throw new InternalServerErrorException('에러2');
     }
   }
 
