@@ -20,7 +20,13 @@ import { PaginatePostDto } from 'src/posts/dto/paginate-post.dto';
 import { UpdatePostDto } from 'src/posts/dto/update-post.dto';
 import { PostsModel } from 'src/posts/entities/posts.entity';
 import { CreatePostImageDto } from 'src/posts/image/dto/create-image.dto';
-import { FindOptionsWhere, LessThan, MoreThan, Repository } from 'typeorm';
+import {
+  FindOptionsWhere,
+  LessThan,
+  MoreThan,
+  QueryRunner,
+  Repository,
+} from 'typeorm';
 
 @Injectable()
 export class PostsService {
@@ -224,11 +230,18 @@ export class PostsService {
     return result;
   }
 
-  async createPost(authorId: number, postDto: CreatePostDto) {
+  getRepository(qr?: QueryRunner) {
+    return qr
+      ? qr.manager.getRepository<PostsModel>(PostsModel)
+      : this.postsRepository;
+  }
+
+  async createPost(authorId: number, postDto: CreatePostDto, qr?: QueryRunner) {
     //1) create -> 저장할 객체를 생성한다.
     //2) save -> 객체를 저장한다.(create 매서드에서 생성한 객체로)
+    const repository = this.getRepository(qr);
 
-    const post = this.postsRepository.create({
+    const post = repository.create({
       author: {
         id: authorId,
       },
@@ -238,7 +251,7 @@ export class PostsService {
       commentCount: 0,
     });
 
-    const newPost = await this.postsRepository.save(post);
+    const newPost = await repository.save(post);
 
     return newPost;
   }
