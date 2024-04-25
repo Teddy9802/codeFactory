@@ -21,7 +21,7 @@ import { PaginatePostDto } from 'src/posts/dto/paginate-post.dto';
 import { UpdatePostDto } from 'src/posts/dto/update-post.dto';
 import { PostsImagesService } from 'src/posts/image/images.service';
 import { User } from 'src/users/decorator/user.decorator';
-import { DataSource } from 'typeorm';
+import { DataSource, QueryRunner as QR } from 'typeorm';
 import { PostsService } from './posts.service';
 
 @Controller('posts')
