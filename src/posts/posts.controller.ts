@@ -14,7 +14,6 @@ import {
 import { AccessTokenGuard } from 'src/auth/guard/bearer-token.guard';
 import { QueryRunner } from 'src/common/decorator/query-decorator';
 import { ImageModelType } from 'src/common/entity/image.entity';
-import { LogInterceptor } from 'src/common/interceptor/log.interceptor';
 import { TransactionInterceptor } from 'src/common/interceptor/transaction.interceptor';
 import { CreatePostDto } from 'src/posts/dto/create-post.dto';
 import { PaginatePostDto } from 'src/posts/dto/paginate-post.dto';
@@ -35,7 +34,7 @@ export class PostsController {
 
   // 1)GET /posts -> 모든 post를가져옴.
   @Get()
-  @UseInterceptors(LogInterceptor)
+  // @UseInterceptors(LogInterceptor)
   getPosts(@Query() query: PaginatePostDto) {
     return this.postsService.paginatePosts(query);
   }
