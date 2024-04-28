@@ -27,6 +27,7 @@ import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
 import { PostsModule } from './posts/posts.module';
 import { UsersModule } from './users/users.module';
+import { ChatsModule } from './chats/chats.module';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { UsersModule } from './users/users.module';
     UsersModule,
     AuthModule,
     CommonModule,
+    ChatsModule,
   ],
   controllers: [AppController],
   providers: [
