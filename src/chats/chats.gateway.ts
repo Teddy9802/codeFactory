@@ -60,6 +60,18 @@ export class ChatsGateway implements OnGatewayConnection {
     const chat = await this.chatsService.createChat(data);
   }
 
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+      whitelist: true, // 사용하지 않는 데코레이터는 삭제하고 쿼리를 날림.
+      forbidNonWhitelisted: true, // 사용하지 않는 데코레이터가 쿼리에서 필터링 되면 에러를 던짐.
+    }),
+  )
+  @UseFilters(SocketCatchHttpExceptionFilter)
+  @UseGuards(SocketBearerTokenGuard)
   @SubscribeMessage('enter_chat')
   async enterChat(
     //방의 chat ID들을 리스트로 받는다.
@@ -81,9 +93,21 @@ export class ChatsGateway implements OnGatewayConnection {
 
   // socket.on('send_message', (message)=>{console.log(message)});
   @SubscribeMessage('send_message')
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+      whitelist: true, // 사용하지 않는 데코레이터는 삭제하고 쿼리를 날림.
+      forbidNonWhitelisted: true, // 사용하지 않는 데코레이터가 쿼리에서 필터링 되면 에러를 던짐.
+    }),
+  )
+  @UseFilters(SocketCatchHttpExceptionFilter)
+  @UseGuards(SocketBearerTokenGuard)
   async sendMessage(
     @MessageBody() dto: CreateMessagesDto, //
-    @ConnectedSocket() socket: Socket,
+    @ConnectedSocket() socket: Socket & { user: UsersModel },
   ) {
     const chatExists = await this.chatsService.checkIfChatExists(dto.chatId);
 
@@ -93,7 +117,10 @@ export class ChatsGateway implements OnGatewayConnection {
       );
     }
 
-    const message = await this.messagesService.createMessage(dto);
+    const message = await this.messagesService.createMessage(
+      dto,
+      socket.user.id,
+    );
 
     socket
       .to(message.chat.id.toString())
