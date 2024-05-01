@@ -7,7 +7,7 @@ import {
   ENV_HASH_ROUNDS_KEY,
   ENV_JWT_SECRET_KEY,
 } from 'src/common/const/env-keys.const';
-import { UsersModel } from 'src/users/entities/users.entity';
+import { UsersModel } from 'src/users/entity/users.entity';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()

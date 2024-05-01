@@ -6,7 +6,7 @@ import { BaseModel } from 'src/common/entity/base.entity';
 import { emailValidationMessage } from 'src/common/validation-message/email-validation.message';
 import { lengthValidationMessage } from 'src/common/validation-message/length-validation.message';
 import { stringValidationMessage } from 'src/common/validation-message/string-validation.message';
-import { PostsModel } from 'src/posts/entities/posts.entity';
+import { PostsModel } from 'src/posts/entity/posts.entity';
 import { RolesEnum } from 'src/users/const/roles.const';
 import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 

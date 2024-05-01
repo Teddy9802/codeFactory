@@ -21,13 +21,14 @@ import {
 import { PUBLIC_FOLDER_PATH } from 'src/common/const/path.const';
 import { ImageModel } from 'src/common/entity/image.entity';
 import { LogMiddleware } from 'src/common/middleware/log.middleware';
-import { PostsModel } from 'src/posts/entities/posts.entity';
-import { UsersModel } from 'src/users/entities/users.entity';
+import { PostsModel } from 'src/posts/entity/posts.entity';
+import { UsersModel } from 'src/users/entity/users.entity';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { ChatsModule } from './chats/chats.module';
 import { CommonModule } from './common/common.module';
+import { CommentsModule } from './posts/comments/comments.module';
 import { PostsModule } from './posts/posts.module';
 import { UsersModule } from './users/users.module';
 
@@ -66,6 +67,7 @@ import { UsersModule } from './users/users.module';
     AuthModule,
     CommonModule,
     ChatsModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [

@@ -18,7 +18,7 @@ import { EnterChatDto } from 'src/chats/dto/enter-chat.dto';
 import { CreateMessagesDto } from 'src/chats/messages/dto/create-messages.dto';
 import { ChatsMessagesService } from 'src/chats/messages/messages.service';
 import { SocketCatchHttpExceptionFilter } from 'src/common/exception-filter/socket-catch-http.exception-filter';
-import { UsersModel } from 'src/users/entities/users.entity';
+import { UsersModel } from 'src/users/entity/users.entity';
 import { UsersService } from 'src/users/users.service';
 
 @WebSocketGateway({
