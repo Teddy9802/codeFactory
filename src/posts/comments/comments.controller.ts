@@ -2,7 +2,7 @@ import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { PaginateCommentsDto } from 'src/posts/comments/dto/paginate-comments.dto';
 import { CommentsService } from './comments.service';
 
-@Controller('posts/postId/comments')
+@Controller('posts/:postId/comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {
     /**
@@ -33,5 +33,10 @@ export class CommentsController {
       query, //
       postId,
     );
+  }
+
+  @Get(':commentId')
+  getComment(@Param('commentId', ParseIntPipe) commentId: number) {
+    return this.commentsService.getCommentById(commentId);
   }
 }
