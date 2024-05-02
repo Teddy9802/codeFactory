@@ -32,5 +32,6 @@ import { PostsService } from './posts.service';
     UsersService,
     CommonService,
   ], //@Injectable을 위한 프로바이더 -> 주입
+  exports: [PostsService],
 })
 export class PostsModule {}
