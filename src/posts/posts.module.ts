@@ -5,9 +5,9 @@ import { AuthService } from 'src/auth/auth.service';
 import { CommonModule } from 'src/common/common.module';
 import { CommonService } from 'src/common/common.service';
 import { ImageModel } from 'src/common/entity/image.entity';
-import { PostsModel } from 'src/posts/entities/posts.entity';
+import { PostsModel } from 'src/posts/entity/posts.entity';
 import { PostsImagesService } from 'src/posts/image/images.service';
-import { UsersModel } from 'src/users/entities/users.entity';
+import { UsersModel } from 'src/users/entity/users.entity';
 import { UsersService } from 'src/users/users.service';
 import { PostsController } from './posts.controller';
 import { PostsService } from './posts.service';
@@ -32,5 +32,6 @@ import { PostsService } from './posts.service';
     UsersService,
     CommonService,
   ], //@Injectable을 위한 프로바이더 -> 주입
+  exports: [PostsService],
 })
 export class PostsModule {}
