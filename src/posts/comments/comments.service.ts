@@ -4,6 +4,7 @@ import { CommonService } from 'src/common/common.service';
 import { DEFAULT_COMMENT_FIND_OPTIONS } from 'src/posts/comments/const/default-comment-find-options-const';
 import { CreateCommentsDto } from 'src/posts/comments/dto/create-comments.dto';
 import { PaginateCommentsDto } from 'src/posts/comments/dto/paginate-comments.dto';
+import { UpdateCommentsDto } from 'src/posts/comments/dto/update-comments.dto';
 import { CommentsModel } from 'src/posts/comments/entity/comments.entity';
 import { UsersModel } from 'src/users/entity/users.entity';
 import { Repository } from 'typeorm';
@@ -60,5 +61,16 @@ export class CommentsService {
       },
       author,
     });
+  }
+
+  async updateComment(dto: UpdateCommentsDto, commentId: number) {
+    const prevComment = await this.commentsRepository.preload({
+      id: commentId,
+      ...dto,
+    });
+
+    const newComment = await this.commentsRepository.save(prevComment);
+
+    return newComment;
   }
 }
