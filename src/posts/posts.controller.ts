@@ -12,6 +12,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { AccessTokenGuard } from 'src/auth/guard/bearer-token.guard';
+import { IsPublic } from 'src/common/decorator/is-public.decorator';
 import { QueryRunner } from 'src/common/decorator/query-decorator';
 import { ImageModelType } from 'src/common/entity/image.entity';
 import { TransactionInterceptor } from 'src/common/interceptor/transaction.interceptor';
@@ -36,6 +37,7 @@ export class PostsController {
 
   // 1)GET /posts -> 모든 post를가져옴.
   @Get()
+  @IsPublic()
   // @UseInterceptors(LogInterceptor)
   getPosts(@Query() query: PaginatePostDto) {
     return this.postsService.paginatePosts(query);
@@ -51,6 +53,7 @@ export class PostsController {
 
   // 2)GET /posts/:id -> id에 해당되는 posts를 가져옴, 예를 들어 id=1일 경우 1의 id를 갖고있는 포스트를 겟
   @Get(':id')
+  @IsPublic()
   getPost(@Param('id', ParseIntPipe) id: number) {
     return this.postsService.getPostById(id);
   }
