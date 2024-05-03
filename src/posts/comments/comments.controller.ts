@@ -8,9 +8,8 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
-import { AccessTokenGuard } from 'src/auth/guard/bearer-token.guard';
+import { IsPublic } from 'src/common/decorator/is-public.decorator';
 import { CreateCommentsDto } from 'src/posts/comments/dto/create-comments.dto';
 import { PaginateCommentsDto } from 'src/posts/comments/dto/paginate-comments.dto';
 import { UpdateCommentsDto } from 'src/posts/comments/dto/update-comments.dto';
@@ -41,6 +40,7 @@ export class CommentsController {
   }
 
   @Get()
+  @IsPublic()
   getComments(
     @Param('postId', ParseIntPipe) postId: number,
     @Query() query: PaginateCommentsDto,
@@ -52,12 +52,12 @@ export class CommentsController {
   }
 
   @Get(':commentId')
+  @IsPublic()
   getComment(@Param('commentId', ParseIntPipe) commentId: number) {
     return this.commentsService.getCommentById(commentId);
   }
 
   @Post()
-  @UseGuards(AccessTokenGuard)
   postComment(
     @Param('postId', ParseIntPipe) postId: number, //
     @Body() body: CreateCommentsDto,
@@ -67,7 +67,6 @@ export class CommentsController {
   }
 
   @Patch(':commentId')
-  @UseGuards(AccessTokenGuard)
   async patchComment(
     @Param('commentId', ParseIntPipe) commentId: number,
     @Body() body: UpdateCommentsDto,
@@ -76,7 +75,6 @@ export class CommentsController {
   }
 
   @Delete(':commentId')
-  @UseGuards(AccessTokenGuard)
   async deleteComment(@Param('commentId', ParseIntPipe) commentId: number) {
     return this.commentsService.deleteComment(commentId);
   }

@@ -44,7 +44,7 @@ export class PostsController {
   }
 
   @Post('random')
-  @UseGuards(AccessTokenGuard)
+  @IsPublic()
   async postPostsRandom(@User('id') userId: number) {
     await this.postsService.generatePosts(userId);
 
@@ -74,7 +74,6 @@ export class PostsController {
   // commit -> 저장
   // rollback -> 원상복구
   @Post()
-  @UseGuards(AccessTokenGuard)
   @UseInterceptors(TransactionInterceptor)
   async postPosts(
     @User('id') userId: number,
