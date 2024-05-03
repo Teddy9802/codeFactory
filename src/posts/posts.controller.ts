@@ -19,6 +19,8 @@ import { CreatePostDto } from 'src/posts/dto/create-post.dto';
 import { PaginatePostDto } from 'src/posts/dto/paginate-post.dto';
 import { UpdatePostDto } from 'src/posts/dto/update-post.dto';
 import { PostsImagesService } from 'src/posts/image/images.service';
+import { RolesEnum } from 'src/users/const/roles.const';
+import { Roles } from 'src/users/decorator/roles.decorator';
 import { User } from 'src/users/decorator/user.decorator';
 import { DataSource, QueryRunner as QR } from 'typeorm';
 import { PostsService } from './posts.service';
@@ -112,7 +114,11 @@ export class PostsController {
 
   //5) DELETE /posts/:id -> id에 해당되는 POST를 삭제.
   @Delete(':id')
+  @UseGuards(AccessTokenGuard)
+  @Roles(RolesEnum.ADMIN)
   deletePost(@Param('id', ParseIntPipe) id: number) {
     return this.postsService.deletePost(id);
   }
+
+  // RBAC -> Role Based Access Control
 }

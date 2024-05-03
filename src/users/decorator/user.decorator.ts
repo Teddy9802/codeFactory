@@ -17,7 +17,8 @@ export const User = createParamDecorator(
       );
     }
 
-    if (user) {
+    // 괄호 안에 값이 user일 때 댓글 생성했을때 author 를 못 불러왔음.
+    if (data) {
       return user[data];
     }
 
