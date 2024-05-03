@@ -6,7 +6,7 @@ import {
   RequestMethod,
 } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChatsModel } from 'src/chats/entity/chats.entity';
@@ -24,6 +24,7 @@ import { LogMiddleware } from 'src/common/middleware/log.middleware';
 import { CommentsModel } from 'src/posts/comments/entity/comments.entity';
 import { PostsModel } from 'src/posts/entity/posts.entity';
 import { UsersModel } from 'src/users/entity/users.entity';
+import { RolesGuard } from 'src/users/guard/roles.guard';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -77,6 +78,10 @@ import { UsersModule } from './users/users.module';
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })
