@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   CanActivate,
   ExecutionContext,
   ForbiddenException,
@@ -7,13 +6,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { PostsService } from 'src/posts/posts.service';
+import { CommentsService } from 'src/posts/comments/comments.service';
 import { RolesEnum } from 'src/users/const/roles.const';
 import { UsersModel } from 'src/users/entity/users.entity';
 
 @Injectable()
-export class IsPostMineOrAdminGuard implements CanActivate {
-  constructor(private readonly postService: PostsService) {}
+export class IsCommentMineOrAdminGuard implements CanActivate {
+  constructor(private readonly commentService: CommentsService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest() as Request & {
@@ -23,24 +22,19 @@ export class IsPostMineOrAdminGuard implements CanActivate {
     const { user } = req;
 
     if (!user) {
-      throw new UnauthorizedException('사용자 정보를 가져올수 없습니다.');
+      throw new UnauthorizedException('사용자 정보를 가져올 수 없습니다.');
     }
-
-    /**
-     * Admin일 경우 그냥 패스
-     */
 
     if (user.role === RolesEnum.ADMIN) {
       return true;
     }
 
-    const postId = req.params.postId;
+    const commentId = req.params.commentId;
 
-    if (!postId) {
-      throw new BadRequestException('Post Id가 파라미터로 제공 돼야합니다.');
-    }
-
-    const isOk = await this.postService.isPostMine(user.id, parseInt(postId));
+    const isOk = await this.commentService.isCommentMine(
+      user.id,
+      parseInt(commentId),
+    );
 
     if (!isOk) {
       throw new ForbiddenException('권한이 없습니다.');

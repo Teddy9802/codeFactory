@@ -19,7 +19,7 @@ import { TransactionInterceptor } from 'src/common/interceptor/transaction.inter
 import { CreatePostDto } from 'src/posts/dto/create-post.dto';
 import { PaginatePostDto } from 'src/posts/dto/paginate-post.dto';
 import { UpdatePostDto } from 'src/posts/dto/update-post.dto';
-import { IsPostMineOrAdmin } from 'src/posts/guard/is-post-mine-or-admin.guard';
+import { IsPostMineOrAdminGuard } from 'src/posts/guard/is-post-mine-or-admin.guard';
 import { PostsImagesService } from 'src/posts/image/images.service';
 import { RolesEnum } from 'src/users/const/roles.const';
 import { Roles } from 'src/users/decorator/roles.decorator';
@@ -106,7 +106,7 @@ export class PostsController {
   //4) PATCH /posts/:id -> id에 해당되는 POST를 변경.
   // ?가 뒤에 붙으면 필수적인 요소가 아니게 됨.
   @Patch(':postId')
-  @UseGuards(IsPostMineOrAdmin)
+  @UseGuards(IsPostMineOrAdminGuard)
   patchPost(
     @Param('postId', ParseIntPipe) id: number,
     @Body() body: UpdatePostDto,
