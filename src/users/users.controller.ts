@@ -1,6 +1,8 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { RolesEnum } from 'src/users/const/roles.const';
 import { Roles } from 'src/users/decorator/roles.decorator';
+import { User } from 'src/users/decorator/user.decorator';
+import { UsersModel } from 'src/users/entity/users.entity';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -17,5 +19,20 @@ export class UsersController {
    */
   getUsers() {
     return this.usersService.getAllUsers();
+  }
+
+  @Get('follow/me')
+  async getFollow(@User() user: UsersModel) {
+    return this.usersService.getFollowers(user.id);
+  }
+
+  @Post('follow/:id')
+  async postFollow(
+    @User() user: UsersModel,
+    @Param('id', ParseIntPipe) followeeId: number,
+  ) {
+    await this.usersService.followUser(user.id, followeeId);
+
+    return true;
   }
 }
