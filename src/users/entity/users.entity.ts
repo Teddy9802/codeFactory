@@ -9,6 +9,7 @@ import { stringValidationMessage } from 'src/common/validation-message/string-va
 import { CommentsModel } from 'src/posts/comments/entity/comments.entity';
 import { PostsModel } from 'src/posts/entity/posts.entity';
 import { RolesEnum } from 'src/users/const/roles.const';
+import { UserFollowersModel } from 'src/users/entity/user-followers.entity';
 import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 
 @Entity()
@@ -86,11 +87,10 @@ export class UsersModel extends BaseModel {
   postComments: CommentsModel[];
 
   // 내가 팔로우 하고 있는 사람들
-  @ManyToMany(() => UsersModel, (user) => user.followees)
-  @JoinTable()
+  @OneToMany(() => UserFollowersModel, (ufm) => ufm.follower)
   followers: UsersModel[];
 
   // 나를 팔로우 하고 있는 사람들
-  @ManyToMany(() => UsersModel, (user) => user.followers)
+  @OneToMany(() => UserFollowersModel, (ufm) => ufm.followee)
   followees: UsersModel[];
 }

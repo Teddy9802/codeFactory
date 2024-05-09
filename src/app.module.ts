@@ -26,6 +26,7 @@ import { ImageModel } from 'src/common/entity/image.entity';
 import { LogMiddleware } from 'src/common/middleware/log.middleware';
 import { CommentsModel } from 'src/posts/comments/entity/comments.entity';
 import { PostsModel } from 'src/posts/entity/posts.entity';
+import { UserFollowersModel } from 'src/users/entity/user-followers.entity';
 import { UsersModel } from 'src/users/entity/users.entity';
 import { RolesGuard } from 'src/users/guard/roles.guard';
 import { AppController } from './app.controller';
@@ -65,6 +66,7 @@ import { UsersModule } from './users/users.module';
         ChatsModel,
         MessagesModel,
         CommentsModel,
+        UserFollowersModel,
       ],
       synchronize: true,
     }),
