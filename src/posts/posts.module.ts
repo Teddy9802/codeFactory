@@ -7,6 +7,7 @@ import { CommonService } from 'src/common/common.service';
 import { ImageModel } from 'src/common/entity/image.entity';
 import { PostsModel } from 'src/posts/entity/posts.entity';
 import { PostsImagesService } from 'src/posts/image/images.service';
+import { UserFollowersModel } from 'src/users/entity/user-followers.entity';
 import { UsersModel } from 'src/users/entity/users.entity';
 import { UsersService } from 'src/users/users.service';
 import { PostsController } from './posts.controller';
@@ -21,6 +22,7 @@ import { PostsService } from './posts.service';
       PostsModel, //
       UsersModel,
       ImageModel,
+      UserFollowersModel,
     ]),
     CommonModule,
   ],
